@@ -2,15 +2,23 @@
 
 import mysql.connector
 import csv
+import json
 import os
 
-def create_dbh():
-    dbh = mysql.connector.connect(
-        host="localhost",
-        user="avwattens",
-        passwd="QP?G3sFtE9@9ZaXY",
-        database="atwat01")
+def get_config():
+    config = {}
+    configfile = 'cfg/config.json'
+    with open (configfile, 'r') as c:
+        config = json.load(c)
+    return config
 
+def create_dbh():
+    config = get_config()
+    dbh = mysql.connector.connect(
+        host = config['host'],
+        user = config['user'],
+        passwd = config['passwd'],
+        database = config['database'])
     return dbh
 
 def query_mysql(id_event):
