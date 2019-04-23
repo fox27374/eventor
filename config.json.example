@@ -1,0 +1,6 @@
+{
+	"host": "localhost",
+	"user": "testuser",
+	"passwd": "SuperSecurePassw0rd",
+	"database": "eventdb"
+}
