@@ -17,9 +17,9 @@ def create_dbh():
     config = get_config()
     dbh = mysql.connector.connect(
         host = config['host'],
-        user = config['username'],
-        passwd = config['password'],
-        database = config['db'])
+        user = config['user'],
+        passwd = config['passwd'],
+        database = config['database'])
 
     return dbh
 
