@@ -21,6 +21,14 @@ def create_dbh():
         database = config['database'])
     return dbh
 
+def get_mysql_count(id_event):
+    sql = 'SELECT COUNT(*) FROM t' + id_event + ';'
+    cnx = create_dbh()
+    cursor = cnx.cursor()
+    cursor.execute(sql)
+    count = cursor.fetchone()
+    return count[0]
+
 def query_mysql(id_event):
     sql = get_sql_from_event(id_event)
     cnx = create_dbh()
@@ -48,7 +56,7 @@ def db_to_html(id_event):
     del data[0]
     for row in data:
         newrow = u'<div class="row">'
-        newrow = newrow + ''.join([u'<div class="cell">' + unicode(x) + u'</div>' for x in row])
+        newrow = newrow + ''.join([u'<div class="cell">' + unicode(x).encode('ascii', 'xmlcharrefreplace') + u'</div>' for x in row])
         newrow += '</div>'
         htable+= newrow
     htable += '</div>'
@@ -57,9 +65,12 @@ def db_to_html(id_event):
 def db_to_csv(id_event):
     csvfile = 'files/file{}.csv'.format(id_event)
     data = query_mysql(id_event)
-    fp = open(csvfile, 'w')
-    myFile = csv.writer(fp)
-    myFile.writerows(data)
+    #fp = open(csvfile, 'w')
+    with open(csvfile, 'w') as fp:
+        myFile = csv.writer(fp)
+        for row in data:
+            enc = [unicode(x).encode('UTF-8') for x in row]
+            myFile.writerow(enc)
     fp.close()
 
 def sql_html(query):
