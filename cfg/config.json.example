@@ -1,6 +1,14 @@
 {
-	"host": "localhost",
-	"user": "testuser",
-	"passwd": "SuperSecurePassw0rd",
-	"database": "eventdb"
+   "db": {
+      "host": "localhost",
+      "user": "user1",
+      "passwd": "sFtE9@9ZaXY",
+      "database": "db01"
+   },
+   "smtp": {
+      "user": "max@examplemail.com",
+      "passwd": "Aoyo56gd",
+      "server": "smtp.a1.net",
+      "port": "587"
+   }
 }

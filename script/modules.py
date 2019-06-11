@@ -16,12 +16,56 @@ def get_config():
 def create_dbh():
     config = get_config()
     dbh = mysql.connector.connect(
-        host = config['host'],
-        user = config['user'],
-        passwd = config['passwd'],
-        database = config['database'])
+        host = config['db']['host'],
+        user = config['db']['user'],
+        passwd = config['db']['passwd'],
+        database = config['db']['database'])
 
     return dbh
+
+def create_smtp():
+    config = get_config()
+    smtpconfig['user'] = config['smtp']['user']
+    smtpconfig['passwd'] = config['smtp']['passwd']
+    smtpconfig['server'] = config['smtp']['server']
+    smtpconfig['port'] = config['smtp']['port']
+
+    return smtpconfig
+
+def sendmail(to, subject, html, text):
+
+    smtpconfig = create_smtp()
+
+    sent_from = username # You can change this to another alias in your Gmail account
+    send_to = [to]   # TO this list of email addresses
+    #send_to = ['tototo@gmail.com']
+    #send_cc = ['great-cc-example@somewhere.com']
+    #send_bcc = ['good-bcc-examplen@someplace.com']
+    
+    # Create message container - the correct MIME type is multipart/alternative.
+    msg = MIMEMultipart('alternative')
+    msg['Subject'] = subject
+    msg['From'] = sent_from
+    msg['To'] = ", ".join(send_to)
+    #msg['cc'] = ", ".join(send_cc)
+
+    part1 = MIMEText(text, 'plain')
+    part2 = MIMEText(html, 'html')
+
+    msg.attach(part1)
+    msg.attach(part2)
+
+    try:
+        server = smtplib.SMTP(smtpconfig['server'], smtpconfig['port'])
+        server.starttls()
+        server.ehlo()
+        server.login(smtpconfig['user'], smtpconfig['passwd'])
+        server.sendmail(sent_from, send_to, msg.as_string())
+        server.close()
+    #    print( 'Email Sent to ' + to)
+    #except:
+    #    print('Error Sending Email to ' + to)
+
 
 def parse_0001(tmpfile):
 
